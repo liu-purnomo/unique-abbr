@@ -1,51 +1,63 @@
-export const uniqueAbbr = (nama: string, existingCodes: string[]): string => {
+export const uniqueAbbr = (
+  name: string,
+  existingCodes: string[],
+  length: number = 3
+): string => {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-  const generateUniqueAbbreviation = (
-    nama: string,
-    usedCodes: Set<string>
-  ): string => {
-    const words = nama.split(' ');
-    let firstLetters =
-      words[0].length === 1 ? `${words[0]}AB` : words[0].toUpperCase();
+  // Remove non-alphabetic characters from the beginning
+  name = name.replace(/^[^a-zA-Z]+/, '');
 
-    if (words.length === 2) {
-      let temp = words[0][0] + words[0][1] + words[1][0];
-      firstLetters = temp.toUpperCase();
-    } else if (words.length > 2) {
-      firstLetters = words
+  // Function to generate a unique abbreviation
+  const generateUniqueAbbreviation = (
+    name: string,
+    usedCodes: Set<string>,
+    length: number
+  ): string => {
+    const words = name.split(/\s+/).filter(Boolean);
+    let abbreviation = '';
+
+    if (words.length === 1) {
+      abbreviation = words[0].substring(0, length).toUpperCase();
+    } else {
+      abbreviation = words
         .map((word) => word.charAt(0))
         .join('')
         .toUpperCase();
     }
 
-    let abbreviation = firstLetters.substring(0, 3);
-    let index1 = 0;
-    let index2 = 0;
-    let index3 = 0;
+    if (abbreviation.length < length) {
+      const lastWord = words[words.length - 1].toUpperCase();
+      for (let i = abbreviation.length; i < length; i++) {
+        abbreviation += lastWord[i] || 'A';
+      }
+    } else {
+      abbreviation = abbreviation.substring(0, length);
+    }
+
+    let attemptCount = 0;
+    let suffix = 0;
 
     while (usedCodes.has(abbreviation)) {
-      if (index1 >= alphabet.length) {
-        index1 = 0;
-        index2++;
+      attemptCount++;
+      if (attemptCount >= alphabet.length ** length) {
+        abbreviation = abbreviation.substring(0, length - 1) + suffix++;
+        if (suffix > 9) throw new Error('Cannot find a unique abbreviation.');
+      } else {
+        const lastIndex = attemptCount % alphabet.length;
+        abbreviation =
+          abbreviation.substring(0, length - 1) + alphabet[lastIndex];
       }
-      if (index2 >= alphabet.length) {
-        index2 = 0;
-        index3++;
-      }
-      if (index3 >= alphabet.length) {
-        throw new Error('Cannot find a unique abbreviation.');
-      }
-
-      abbreviation = firstLetters[0] + alphabet[index1] + alphabet[index2];
-      index1++;
     }
 
     return abbreviation;
   };
 
+  // Convert existing codes to uppercase for case-insensitive matching
   const usedCodes = new Set(existingCodes.map((code) => code.toUpperCase()));
-  let abbreviation = generateUniqueAbbreviation(nama, usedCodes);
+
+  // Generate unique abbreviation
+  const abbreviation = generateUniqueAbbreviation(name, usedCodes, length);
   usedCodes.add(abbreviation);
 
   return abbreviation;
