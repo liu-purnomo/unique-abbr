@@ -1,8 +1,11 @@
 {
   "name": "unique-abbr",
-  "version": "2.0.0",
+  "version": "2.10.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "description": "A simple TypeScript utility to generate unique three-letter abbreviations based on names, ensuring no duplicates from a given list.",
   "scripts": {
     "test": "jest --watchAll=false",

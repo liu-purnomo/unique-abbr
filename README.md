@@ -1,60 +1,90 @@
-# unique-abbr
+# Unique Abbr
 
-A simple TypeScript utility to generate unique abbreviations based on names, ensuring no duplicates from a given list. The abbreviation length can be customized.
+![npm](https://img.shields.io/npm/v/unique-abbr)
+![license](https://img.shields.io/npm/l/unique-abbr)
+
+A simple TypeScript utility to generate unique three-letter abbreviations based on names, ensuring no duplicates from a given list.
 
 ## Installation
 
-You can install this package via npm:
+You can install `unique-abbr` via npm:
 
 ```sh
 npm install unique-abbr
 ```
 
+or using yarn:
+
+```sh
+yarn add unique-abbr
+```
+
 ## Usage
 
-### Importing the function
+Import the function and generate unique abbreviations:
+
+### Basic Example
 
 ```ts
-import { uniqueAbbr } from "unique-abbr";
+import { uniqueAbbr } from 'unique-abbr';
+
+const existingCodes = ['ABC', 'DEF', 'XYZ'];
+const abbreviation = uniqueAbbr('John Doe', existingCodes);
+
+console.log(abbreviation); // Example output: 'JD' or 'JOH'
 ```
 
-### Generating a unique abbreviation
+### Custom Abbreviation Length
+
+You can specify the abbreviation length:
 
 ```ts
-const existingCodes = ["JDO", "JDA", "ABC"];
-const abbreviation = uniqueAbbr("John Doe", existingCodes, 4);
-console.log(abbreviation); // Example output: "JDOE"
+const abbreviation = uniqueAbbr('Alice Wonderland', existingCodes, 4);
+console.log(abbreviation); // Example output: 'ALWO'
 ```
 
-## Function Signature
+## API
+
+### `uniqueAbbr(name: string, existingCodes: string[], length: number = 3): string`
+
+Generates a unique abbreviation from a name, avoiding duplicates.
+
+#### Parameters:
+- `name` (**string**) - The name to generate an abbreviation for.
+- `existingCodes` (**string[]**) - List of existing abbreviations to avoid duplicates.
+- `length` (**number**, optional, default: `3`) - The desired abbreviation length.
+
+#### Returns:
+- A **string** containing the unique abbreviation.
+
+## Examples
+
+### Handling Duplicate Abbreviations
+
+If an abbreviation is already in use, it tries to create a unique variant:
 
 ```ts
-uniqueAbbr(nama: string, existingCodes: string[], length?: number): string;
+const existingCodes = ['JD', 'JOH'];
+const abbreviation = uniqueAbbr('John Doe', existingCodes);
+console.log(abbreviation); // Example output: 'JO1'
 ```
 
-### Parameters
-- `nama`: A string representing the name for which an abbreviation should be generated.
-- `existingCodes`: An array of existing abbreviations to ensure uniqueness.
-- `length` (optional, default = `3`): The desired length of the abbreviation.
+### Edge Cases
 
-### Returns
-- A unique abbreviation of the specified length.
+```ts
+uniqueAbbr('12345', []); // Ignores non-alphabetic characters
+uniqueAbbr('A B C', []); // Returns 'ABC' or variation
+```
 
-## Algorithm
-1. Extract initials from the name.
-2. If the abbreviation already exists in `existingCodes`, modify it using alphabetical increments.
-3. Ensure the generated abbreviation remains unique and matches the specified length.
+## Contributing
 
-## Error Handling
-Throws an error if a unique abbreviation cannot be found.
-
-## Repository
-
-- **Repository:** [https://github.com/liu-purnomo/unique-abbr](https://github.com/liu-purnomo/unique-abbr)
-- **Bugs:** [https://github.com/liu-purnomo/unique-abbr/issues](https://github.com/liu-purnomo/unique-abbr/issues)
-- **Homepage:** [https://github.com/liu-purnomo/unique-abbr#readme](https://github.com/liu-purnomo/unique-abbr#readme)
-- **Author:** [liupurnomo.com](https://liupurnomo.com)
+Feel free to submit issues or pull requests on GitHub.
 
 ## License
 
-MIT License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Links
+- [GitHub Repository](https://github.com/liu-purnomo/unique-abbr)
+- [Report Issues](https://github.com/liu-purnomo/unique-abbr/issues)
+
